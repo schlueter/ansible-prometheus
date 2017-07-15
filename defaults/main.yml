@@ -45,6 +45,27 @@ prometheus_rebuild:           false
 
 
 #
+# prometheus configuration
+#
+
+# matching prometheus defaults https://github.com/prometheus/prometheus/blob/master/config/config.go#L77-L79
+prometheus_global_scrape_interval: 1m
+prometheus_global_scrape_timeout: 10s
+prometheus_global_evaluation_interval: 1m
+
+prometheus_global_external_labels:
+  monitor: master
+
+prometheus_node_scrape_interval:
+prometheus_node_scrape_timeout:
+prometheus_node_targets: "{{ ['localhost'] if 'node_exporter' in prometheus_components else [] }}"
+prometheus_rule_files: {}
+prometheus_scrape_configs: []
+prometheus_self_scrape_interval:
+prometheus_self_scrape_timeout:
+
+
+#
 # derived variables; internal use only.
 #
 
