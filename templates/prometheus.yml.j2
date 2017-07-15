@@ -25,8 +25,8 @@ global:
 {% if prometheus_rule_files is defined %}
 {# Rule files specifies a list of files from which rules are read. #}
 rule_files:
-{% for (key, value) in prometheus_rule_files.iteritems() %}
-  - {{ prometheus_rule_path }}/{{ value.dest }}
+{% for key in prometheus_rule_files %}
+  - {{ prometheus_rule_path }}/{{ prometheus_rule_files[key]['dest'] }}
 {% endfor %}
 {% endif %}
 
