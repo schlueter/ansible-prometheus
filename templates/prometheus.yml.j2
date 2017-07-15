@@ -1,63 +1,63 @@
 # {{ ansible_managed }}
 global:
   {# How frequently to scrape targets by default. Defaults to 1m. #}
-  {% if prometheus_global_scrape_interval -%}
+{% if prometheus_global_scrape_interval -%}
   scrape_interval: {{ prometheus_global_scrape_interval }}
-  {% endif %}
+{% endif %}
 
   {# How long until a scrape request times out. Defaults to 10s. #}
-  {% if prometheus_global_scrape_timeout -%}
+{% if prometheus_global_scrape_timeout -%}
   scrape_timeout: {{ prometheus_global_scrape_timeout }}
-  {% endif %}
+{% endif %}
 
   {# How frequently to evaluate rules. Defaults to 1m. #}
-  {% if prometheus_global_evaluation_interval -%}
+{% if prometheus_global_evaluation_interval -%}
   evaluation_interval: {{ prometheus_global_evaluation_interval }}
-  {% endif %}
+{% endif %}
 
   {# The labels to add to any time series or alerts when communicating with #}
   {# external systems (federation, remote storage, Alertmanager). #}
-  {% if prometheus_global_external_labels -%}
+{% if prometheus_global_external_labels -%}
   external_labels:
     {{ prometheus_global_external_labels | to_nice_yaml }}
-  {% endif %}
+{% endif %}
 
 {% if prometheus_rule_files is defined -%}
 {# Rule files specifies a list of files from which rules are read. #}
 rule_files:
-  {% for (key, value) in prometheus_rule_files.iteritems() -%}
+{% for (key, value) in prometheus_rule_files.iteritems() -%}
   - {{ prometheus_rule_path }}/{{ value.dest }}
-  {% endfor %}
+{% endfor %}
 {% endif %}
 
 # A list of scrape configurations.
 scrape_configs:
 
   - job_name: prometheus
-    {% if prometheus_self_scrape_interval -%}
+{% if prometheus_self_scrape_interval -%}
     scrape_interval: {{ prometheus_self_scrape_interval }}
-    {% endif %}
-    {% if prometheus_self_scrape_timeout -%}
+{% endif %}
+{% if prometheus_self_scrape_timeout -%}
     scrape_interval: {{ prometheus_self_scrape_timeout }}
-    {% endif %}
+{% endif %}
     static_configs:
       - targets: ['localhost:9090']
 
-  {% if 'node_exporter' in prometheus_components or prometheus_node_targets %}
+{% if 'node_exporter' in prometheus_components or prometheus_node_targets %}
   - job_name: node
-    {% if prometheus_node_scrape_interval -%}
+{% if prometheus_node_scrape_interval -%}
     scrape_interval: {{ prometheus_node_scrape_interval }}
-    {% endif %}
-    {% if prometheus_node_scrape_timeout -%}
+{% endif %}
+{% if prometheus_node_scrape_timeout -%}
     scrape_interval: {{ prometheus_node_scrape_timeout }}
-    {% endif %}
+{% endif %}
     static_configs:
       - targets:
-      {% for target in prometheus_node_targets -%}
+{% for target in prometheus_node_targets %}
         - {{ target }}:9100
-      {% endfor %}
-  {% endif %}
+{% endfor %}
+{% endif %}
 
-  {% if prometheus_scrape_configs -%}
+{% if prometheus_scrape_configs -%}
   {{ prometheus_scrape_configs | to_nice_yaml }}
-  {% endif %}
+{% endif %}
